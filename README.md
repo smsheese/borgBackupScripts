@@ -86,6 +86,8 @@ Feel free to contribute by:
 ## 📜 **License**
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
+### Disclaimer
+These scripts were created with the help of ChatGPT. If you encounter any issues or have suggestions for improvements, feel free to reach out. Your feedback is highly appreciated, and we're always looking to make things better! 😊
 
+---
 ### 🤖 **Happy Backing Up!** 🎉
