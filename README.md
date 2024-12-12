@@ -9,6 +9,7 @@ Clone this repository to your local machine:
 ```bash
 git clone https://github.com/smsheese/borgBackupScripts.git
 cd borgBackupScripts
+chmod +x *.sh      # make the scripts executable
 ```
 
 ### 2. Create and Configure `.env` file
