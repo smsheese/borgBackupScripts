@@ -14,7 +14,7 @@ cd borgBackupScripts
 ### 2. Create and Configure `.env` file
 Copy the `.env.example` file to `.env`:
 ```bash
-cp .env.example .env
+cp example.env .env
 ```
 Update the `.env` file with the appropriate details, such as:
 - **Database Details** (e.g., MySQL/MariaDB)
