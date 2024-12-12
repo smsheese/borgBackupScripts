@@ -78,8 +78,8 @@ echo "Initializing Borg repositories on the remote server..."
 ssh -i $SSH_PRIVATE_KEY -p $SSH_PORT "$BORG_REMOTE_USER@$BORG_REMOTE_HOST" "mkdir -p ./$BORG_REMOTE_PATH_DB ./$BORG_REMOTE_PATH_FILES"
 export BORG_RSH="ssh -i $SSH_PRIVATE_KEY -p $SSH_PORT"
 export BORG_PASSPHRASE="$BORG_PASSPHRASE"
-borg init --encryption=repokey "ssh://$BORG_REMOTE_USER@$BORG_REMOTE_HOST:$SSH_PORT/./$BORG_REMOTE_PATH_DB"
-borg init --encryption=repokey "ssh://$BORG_REMOTE_USER@$BORG_REMOTE_HOST:$SSH_PORT/./$BORG_REMOTE_PATH_FILES"
+borg init --encryption=repokey "ssh://$BORG_REMOTE_USER@$BORG_REMOTE_HOST/./$BORG_REMOTE_PATH_DB"
+borg init --encryption=repokey "ssh://$BORG_REMOTE_USER@$BORG_REMOTE_HOST/./$BORG_REMOTE_PATH_FILES"
 
 # Set restrictive permissions for the backup directory and SSH key
 echo "Setting restrictive permissions for the backup directory and SSH key..."
