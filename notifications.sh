@@ -11,6 +11,23 @@ else
     exit 1
 fi
 
+# Function to send an email
+send_email() {
+    local subject="$1"
+    local body="$2"
+    if [ "$EMAIL_NOTIFICATIONS_ENABLED" == "yes" ]; then
+        {
+            echo "Subject: $subject"
+            echo "From: $EMAIL_FROM"
+            echo "To: $EMAIL_TO"
+            echo "Content-Type: text/plain; charset=UTF-8"
+            echo
+            echo -e "$body"
+        } | \
+        /usr/sbin/sendmail -t
+    fi
+}
+
 # Function to send a Telegram message
 send_telegram_message() {
     local message="$1"
@@ -24,9 +41,9 @@ TIMEZONE="UTC"
 DATE_FORMAT="+%Y-%m-%d %H:%M:%S"  # Default datetime format
 
 # Check for timezone argument and validate
-if [ -n "$2" ]; then
-    if [ "$(timedatectl list-timezones | grep -i "$2")" ]; then
-        TIMEZONE="$2"
+if [ -n "$3" ]; then
+    if [ "$(timedatectl list-timezones | grep -i "$3")" ]; then
+        TIMEZONE="$3"
     else
         echo "Invalid timezone specified. Using UTC as default."
     fi
@@ -39,10 +56,23 @@ export TZ=$TIMEZONE
 CURRENT_DATETIME=$(date "$DATE_FORMAT")
 
 # Check input arguments
-if [ "$1" == "success" ]; then
-    send_telegram_message "✅ Backup Successful for *$BACKUP_NAME* at $CURRENT_DATETIME"
-elif [ "$1" == "error" ]; then
-    send_telegram_message "❌ Backup Failed for *$BACKUP_NAME* at $CURRENT_DATETIME. Error details: $2"
+# $1 = success|error, $2 = log file, $3 = timezone (optional)
+if [ "$1" == "success" ] || [ "$1" == "error" ]; then
+    LOG_FILE="$2"
+    if [ -f "$LOG_FILE" ]; then
+        LOG_CONTENT=$(cat "$LOG_FILE")
+    else
+        LOG_CONTENT="$2"
+    fi
+    if [ "$1" == "success" ]; then
+        MSG="✅ Backup Successful for *$BACKUP_NAME* at $CURRENT_DATETIME\n\n$LOG_CONTENT"
+        send_telegram_message "$MSG"
+        send_email "$EMAIL_SUBJECT - SUCCESS" "$MSG"
+    else
+        MSG="❌ Backup Failed for *$BACKUP_NAME* at $CURRENT_DATETIME\n\n$LOG_CONTENT"
+        send_telegram_message "$MSG"
+        send_email "$EMAIL_SUBJECT - ERROR" "$MSG"
+    fi
 else
-    echo "Usage: notifications.sh [success|error] [error_details]"
+    echo "Usage: notifications.sh [success|error] [log_file_or_message] [timezone]"
 fi
