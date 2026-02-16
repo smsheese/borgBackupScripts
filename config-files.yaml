@@ -68,16 +68,21 @@ storage:
 # ----------------------------------------------------------------------------
 # RETENTION POLICY - FILES
 # ----------------------------------------------------------------------------
-retention:
-    keep_daily: 7         # 7 days of daily backups
-    keep_weekly: 12       # 12 weeks of weekly backups
-    keep_monthly: 12      # 12 months of monthly backups
-    keep_yearly: 10       # 10 years of yearly backups
-    prefix: sites-
+# Number of daily archives to keep
+keep_daily: 7         # 7 days of daily backups
+# Number of weekly archives to keep
+keep_weekly: 12       # 12 weeks of weekly backups
+# Number of monthly archives to keep
+keep_monthly: 12      # 12 months of monthly backups
+# Number of yearly archives to keep
+keep_yearly: 10       # 10 years of yearly backups
+# Deprecated: Use archive_name_format instead
+# prefix: sites-
 
 # ----------------------------------------------------------------------------
 # CONSISTENCY CHECKS
 # ----------------------------------------------------------------------------
+# List of one or more consistency checks to run
 consistency:
     checks:
         - name: repository

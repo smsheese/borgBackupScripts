@@ -50,17 +50,23 @@ mysql_databases:
 # ----------------------------------------------------------------------------
 # RETENTION POLICY - DATABASES
 # ----------------------------------------------------------------------------
-retention:
-    keep_hourly: 168      # 7 days of hourly backups
-    keep_daily: 30        # 30 days of daily backups
-    keep_weekly: 15       # 15 weeks of weekly backups
-    keep_monthly: 36      # 36 months of monthly backups
-    keep_yearly: 10       # 10 years of yearly backups
-    prefix: databases-
+# Number of hourly archives to keep
+keep_hourly: 168      # 7 days of hourly backups
+# Number of daily archives to keep
+keep_daily: 30        # 30 days of daily backups
+# Number of weekly archives to keep
+keep_weekly: 15       # 15 weeks of weekly backups
+# Number of monthly archives to keep
+keep_monthly: 36      # 36 months of monthly backups
+# Number of yearly archives to keep
+keep_yearly: 10       # 10 years of yearly backups
+# Deprecated: Use archive_name_format instead
+# prefix: databases-
 
 # ----------------------------------------------------------------------------
 # CONSISTENCY CHECKS
 # ----------------------------------------------------------------------------
+# List of one or more consistency checks to run
 consistency:
     checks:
         - name: repository
