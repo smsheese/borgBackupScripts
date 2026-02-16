@@ -1,0 +1,104 @@
+# ============================================================================
+# BORGMATIC CONFIGURATION - DATABASE BACKUPS
+# ============================================================================
+# This configuration handles MySQL/MariaDB database backups
+# Runs on hourly schedule with aggressive retention policy
+
+location:
+    # Databases are dumped by borgmatic, not from source_directories
+    source_directories: []
+
+    # Any temporary directories for database dumps
+    source_directories_mismatch: ignore
+
+storage:
+    # Database repository location
+    repositories:
+        - path: ssh://{{ env "BORG_REMOTE_USER" }}@{{ env "BORG_REMOTE_HOST" }}/{{ env "BORG_REMOTE_PATH_DB" }}
+          label: databases
+          extra_borg_options:
+                rsh: ssh -i {{ env "SSH_PRIVATE_KEY" }} -p {{ env "SSH_PORT" }}
+    
+    # Encryption passphrase
+    encryption_passphrase: {{ env "BORG_PASSPHRASE" }}
+    
+    # Compression type
+    compression: {{ env "BORG_COMPRESSION" }}
+    
+    # Archive name template
+    archive_name_format: databases-{now:%Y-%m-%d_%H-%M}
+
+# ----------------------------------------------------------------------------
+# DATABASE CONFIGURATION
+# ----------------------------------------------------------------------------
+mysql_databases:
+    - name: all  # Dumps all databases
+      hostname: {{ env "DB_HOST" }}
+      port: {{ env "DB_PORT" }}
+      username: {{ env "DB_USER" }}
+      password: {{ env "DB_PASS" }}
+      options: --skip-lock-tables --quick --single-transaction
+      format: sql
+    # You can also specify individual databases:
+    # - name: my_database
+    #   hostname: {{ env "DB_HOST" }}
+    #   port: {{ env "DB_PORT" }}
+    #   username: {{ env "DB_USER" }}
+    #   password: {{ env "DB_PASS" }}
+
+# ----------------------------------------------------------------------------
+# RETENTION POLICY - DATABASES
+# ----------------------------------------------------------------------------
+retention:
+    keep_hourly: 168      # 7 days of hourly backups
+    keep_daily: 30        # 30 days of daily backups
+    keep_weekly: 15       # 15 weeks of weekly backups
+    keep_monthly: 36      # 36 months of monthly backups
+    keep_yearly: 10       # 10 years of yearly backups
+    prefix: databases-
+
+# ----------------------------------------------------------------------------
+# CONSISTENCY CHECKS
+# ----------------------------------------------------------------------------
+consistency:
+    checks:
+        - name: repository
+        - name: archives
+          frequency: 2 weeks
+    check_last: 3
+
+# ----------------------------------------------------------------------------
+# OUTPUT OPTIONS
+# ----------------------------------------------------------------------------
+output:
+    log_file: /var/log/borgmatic-databases.log
+    # Send logs to systemd journal
+    log_file_level: info
+
+# ----------------------------------------------------------------------------
+# MONITORING & NOTIFICATIONS
+# ----------------------------------------------------------------------------
+# Health checks (optional)
+# Uncomment and configure if using healthchecks.io
+# healthchecks:
+#     ping_url: https://hc-ping.com/your-uuid
+
+# Apprise for notifications (Telegram, email, etc.)
+# Uncomment and configure APRISE_URL in .env to enable
+# monitoring:
+#     - apprise: {{ env "APRISE_URL" }}
+
+# Hooks for custom scripts
+hooks:
+    # Run before backup starts
+    before_backup:
+        - echo "Starting database backup at $(date)"
+    
+    # Run after backup completes successfully
+    after_backup:
+        - echo "Database backup completed successfully at $(date)"
+    
+    # Run on backup failure
+    on_error:
+        - echo "Database backup failed at $(date)"
+        - echo "Check /var/log/borgmatic-databases.log for details"
