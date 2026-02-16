@@ -14,16 +14,16 @@ location:
 storage:
     # Database repository location
     repositories:
-        - path: ssh://{{ env "BORG_REMOTE_USER" }}@{{ env "BORG_REMOTE_HOST" }}/{{ env "BORG_REMOTE_PATH_DB" }}
+        - path: ssh://{{ env "BORG_REMOTE_USER" | default("backup_user") }}@{{ env "BORG_REMOTE_HOST" | default("backup.server.com") }}/{{ env "BORG_REMOTE_PATH_DB" | default("./databases") }}
           label: databases
           extra_borg_options:
-                rsh: ssh -i {{ env "SSH_PRIVATE_KEY" }} -p {{ env "SSH_PORT" }}
+                rsh: ssh -i {{ env "SSH_PRIVATE_KEY" | default("~/.ssh/borgBackup") }} -p {{ env "SSH_PORT" | default("22") }}
     
     # Encryption passphrase
-    encryption_passphrase: {{ env "BORG_PASSPHRASE" }}
+    encryption_passphrase: {{ env "BORG_PASSPHRASE" | default("changeme") }}
     
     # Compression type
-    compression: {{ env "BORG_COMPRESSION" }}
+    compression: {{ env "BORG_COMPRESSION" | default("lzma") }}
     
     # Archive name template
     archive_name_format: databases-{now:%Y-%m-%d_%H-%M}
@@ -33,18 +33,18 @@ storage:
 # ----------------------------------------------------------------------------
 mysql_databases:
     - name: all  # Dumps all databases
-      hostname: {{ env "DB_HOST" }}
-      port: {{ env "DB_PORT" }}
-      username: {{ env "DB_USER" }}
-      password: {{ env "DB_PASS" }}
+      hostname: {{ env "DB_HOST" | default("localhost") }}
+      port: {{ env "DB_PORT" | default("3306") }}
+      username: {{ env "DB_USER" | default("root") }}
+      password: {{ env "DB_PASS" | default("root") }}
       options: --skip-lock-tables --quick --single-transaction
       format: sql
     # You can also specify individual databases:
     # - name: my_database
-    #   hostname: {{ env "DB_HOST" }}
-    #   port: {{ env "DB_PORT" }}
-    #   username: {{ env "DB_USER" }}
-    #   password: {{ env "DB_PASS" }}
+    #   hostname: {{ env "DB_HOST" | default("localhost") }}
+    #   port: {{ env "DB_PORT" | default("3306") }}
+    #   username: {{ env "DB_USER" | default("root") }}
+    #   password: {{ env "DB_PASS" | default("root") }}
 
 # ----------------------------------------------------------------------------
 # RETENTION POLICY - DATABASES
@@ -86,7 +86,7 @@ output:
 # Apprise for notifications (Telegram, email, etc.)
 # Uncomment and configure APRISE_URL in .env to enable
 # monitoring:
-#     - apprise: {{ env "APRISE_URL" }}
+#     - apprise: {{ env "APRISE_URL" | default("") }}
 
 # Hooks for custom scripts
 hooks:
