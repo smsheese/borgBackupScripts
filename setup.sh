@@ -3,7 +3,7 @@
 # ============================================================================
 # BORGMATIC MIGRATION SETUP SCRIPT
 # ============================================================================
-# This script automates the migration from custom bash scripts to borgmatic
+# This script automates migration from custom bash scripts to borgmatic
 
 set -euo pipefail
 
@@ -70,7 +70,7 @@ check_prerequisites() {
     print_header "Checking Prerequisites"
     
     # Check if running as root
-    if [ "$EUID" -ne 0 ]; then 
+    if [ "$EUID" -ne 0 ]; then
         print_error "This script must be run as root (use sudo)"
         exit 1
     fi
@@ -320,7 +320,7 @@ Type=oneshot
 Nice=19
 IOSchedulingClass=idle
 IOSchedulingPriority=7
-Environment="TZ={{ env 'TIMEZONE' | default('UTC') }}"
+Environment="TZ=${TIMEZONE:-UTC}"
 ExecStart=/usr/local/bin/borgmatic create --config /etc/borgmatic/config-databases.yaml --verbosity 1 --stats
 ExecStartPost=/usr/local/bin/borgmatic check --config /etc/borgmatic/config-databases.yaml
 
@@ -357,7 +357,7 @@ Type=oneshot
 Nice=19
 IOSchedulingClass=idle
 IOSchedulingPriority=7
-Environment="TZ={{ env 'TIMEZONE' | default('UTC') }}"
+Environment="TZ=${TIMEZONE:-UTC}"
 ExecStart=/usr/local/bin/borgmatic create --config /etc/borgmatic/config-files.yaml --verbosity 1 --stats
 ExecStartPost=/usr/local/bin/borgmatic check --config /etc/borgmatic/config-files.yaml
 

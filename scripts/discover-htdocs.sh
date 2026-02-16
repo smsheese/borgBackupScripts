@@ -12,6 +12,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Configuration
+# Source .env file if it exists
+if [ -f "$(dirname "$0")/../.env" ]; then
+    source "$(dirname "$0")/../.env"
+fi
+
 CLOUDPANEL_HOME_BASE="${CLOUDPANEL_HOME_BASE:-/home}"
 CLOUDPANEL_HTDOCS_SUBDIR="${CLOUDPANEL_HTDOCS_SUBDIR:-htdocs}"
 OUTPUT_FILE="${OUTPUT_FILE:-/etc/borgmatic/htdocs-dirs.txt}"
