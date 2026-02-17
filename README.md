@@ -2,6 +2,36 @@
 
 Automated backup solution for **CloudPanel** servers using **borgmatic** - a Python wrapper for BorgBackup.
 
+**Current Version:** v2.0.5 - All critical YAML structure issues resolved ✅
+
+---
+
+## 📢 **Recent Updates (v2.0.2 - v2.0.5)**
+
+### v2.0.5 - Critical YAML Structure Fixes (2026-02-16)
+- ✅ **Fixed retention policy structure** - Moved `keep_hourly`, `keep_daily`, `keep_weekly`, `keep_monthly`, `keep_yearly` to top-level keys (borgmatic requirement)
+- ✅ **Fixed consistency section** - Corrected nesting structure for `checks:` under `consistency:`
+- ✅ **Added official reference config** - `docs/reference.config.yaml` for validation
+- **Impact**: Retention policies now work correctly, archives will be pruned, consistency checks will run
+
+### v2.0.4 - Jinja2 Templating Fix (2026-02-16)
+- ✅ **Removed problematic `| default()` filters** - Borgmatic's Jinja2 parser doesn't support complex filters
+- ✅ **Changed compression to static value** - Set to `lzma` (can be overridden via `BORG_COMPRESSION` env var)
+- **Impact**: Config validation now succeeds, no more "unhashable key" errors
+
+### v2.0.3 - Attempted Fix (2026-02-16)
+- ⚠️ **Attempted to add default values** - Introduced issue resolved in v2.0.4
+
+### v2.0.2 - Systemd & Script Fixes (2026-02-16)
+- ✅ **Fixed systemd timer configuration** - Corrected environment variable passing
+- ✅ **Fixed bash syntax errors** - Resolved shell script issues in setup.sh
+- ✅ **Updated example.env** - Added missing variables and corrected format
+- ✅ **Fixed discover-htdocs.sh** - Updated to use environment variables correctly
+- **Impact**: Setup script now works correctly, systemd timers function properly
+
+---
+
+
 ## 🎯 **Overview**
 
 This repository provides a complete backup solution specifically designed for **CloudPanel** environments. It automates database and file backups using **borgmatic**, offering:
@@ -104,6 +134,7 @@ SSH_PRIVATE_KEY=~/.ssh/borgBackup
 BORG_REMOTE_PATH_DB="./databases"
 BORG_REMOTE_PATH_FILES="./files"
 BORG_COMPRESSION="lzma"
+SSH_PORT=22
 
 # CloudPanel Paths
 CLOUDPANEL_HOME_BASE="/home"

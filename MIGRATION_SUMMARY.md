@@ -87,21 +87,21 @@ sudo borgmatic list --config /etc/borgmatic/config-files.yaml
 
 ### Database Retention (config-databases.yaml)
 ```yaml
-retention:
-    keep_hourly: 168    # 7 days (same as old: BORG_KEEP_DB)
-    keep_daily: 30      # 30 days (same as old)
-    keep_weekly: 15     # 15 weeks (same as old)
-    keep_monthly: 36    # 36 months (same as old)
-    keep_yearly: 10     # 10 years (same as old)
+# Retention policies are top-level keys (borgmatic requirement)
+keep_hourly: 168    # 7 days (same as old: BORG_KEEP_DB)
+keep_daily: 30      # 30 days (same as old)
+keep_weekly: 15     # 15 weeks (same as old)
+keep_monthly: 36    # 36 months (same as old)
+keep_yearly: 10     # 10 years (same as old)
 ```
 
 ### Files Retention (config-files.yaml)
 ```yaml
-retention:
-    keep_daily: 7       # 7 days (same as old: BORG_KEEP_FILES)
-    keep_weekly: 12     # 12 weeks (same as old)
-    keep_monthly: 12    # 12 months (same as old)
-    keep_yearly: 10     # 10 years (same as old)
+# Retention policies are top-level keys (borgmatic requirement)
+keep_daily: 7       # 7 days (same as old: BORG_KEEP_FILES)
+keep_weekly: 12     # 12 weeks (same as old)
+keep_monthly: 12    # 12 months (same as old)
+keep_yearly: 10     # 10 years (same as old)
 ```
 
 ### Schedules
