@@ -4,20 +4,19 @@
 # This configuration handles MySQL/MariaDB database backups
 # Runs on hourly schedule with aggressive retention policy
 
-location:
-    # Databases are dumped by borgmatic, not from source_directories
-    source_directories: []
+source_directories: []
 
-    # Any temporary directories for database dumps
-    source_directories_mismatch: ignore
-
+# ----------------------------------------------------------------------------
+# STORAGE CONFIGURATION
+# ----------------------------------------------------------------------------
 storage:
     # Database repository location
     repositories:
         - path: ssh://{{ env "BORG_REMOTE_USER" }}@{{ env "BORG_REMOTE_HOST" }}/{{ env "BORG_REMOTE_PATH_DB" }}
           label: databases
-          extra_borg_options:
-                rsh: ssh -i {{ env "SSH_PRIVATE_KEY" }} -p {{ env "SSH_PORT" }}
+    
+    # SSH command for remote repository access
+    ssh_command: ssh -i {{ env "SSH_PRIVATE_KEY" }} -p {{ env "SSH_PORT" }}
     
     # Encryption passphrase
     encryption_passphrase: '{{ env "BORG_PASSPHRASE" }}'
@@ -35,7 +34,7 @@ storage:
 mysql_databases:
     - name: all  # Dumps all databases
       hostname: '{{ env "DB_HOST" }}'
-      port: '{{ env "DB_PORT" }}'
+      port: 3306
       username: '{{ env "DB_USER" }}'
       password: '{{ env "DB_PASS" }}'
       options: --skip-lock-tables --quick --single-transaction
@@ -43,7 +42,7 @@ mysql_databases:
     # You can also specify individual databases:
     # - name: my_database
     #   hostname: '{{ env "DB_HOST" }}'
-    #   port: '{{ env "DB_PORT" }}'
+    #   port: 3306
     #   username: '{{ env "DB_USER" }}'
     #   password: '{{ env "DB_PASS" }}'
 
@@ -79,8 +78,7 @@ consistency:
 # ----------------------------------------------------------------------------
 output:
     log_file: /var/log/borgmatic-databases.log
-    # Send logs to systemd journal
-    log_file_level: info
+    log_file_verbosity: 1
 
 # ----------------------------------------------------------------------------
 # MONITORING & NOTIFICATIONS
