@@ -56,7 +56,7 @@ storage:
                 rsh: ssh -i {{ env "SSH_PRIVATE_KEY" }} -p {{ env "SSH_PORT" }}
     
     # Encryption passphrase
-    encryption_passphrase: {{ env "BORG_PASSPHRASE" }}
+    encryption_passphrase: '{{ env "BORG_PASSPHRASE" }}'
     
     # Compression type (lzma, zlib, lz4, zstd, none)
     # NOTE: This value can be overridden by setting BORG_COMPRESSION environment variable

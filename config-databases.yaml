@@ -20,7 +20,7 @@ storage:
                 rsh: ssh -i {{ env "SSH_PRIVATE_KEY" }} -p {{ env "SSH_PORT" }}
     
     # Encryption passphrase
-    encryption_passphrase: {{ env "BORG_PASSPHRASE" }}
+    encryption_passphrase: '{{ env "BORG_PASSPHRASE" }}'
     
     # Compression type (lzma, zlib, lz4, zstd, none)
     # NOTE: This value can be overridden by setting BORG_COMPRESSION environment variable
@@ -34,18 +34,18 @@ storage:
 # ----------------------------------------------------------------------------
 mysql_databases:
     - name: all  # Dumps all databases
-      hostname: {{ env "DB_HOST" }}
-      port: {{ env "DB_PORT" }}
-      username: {{ env "DB_USER" }}
-      password: {{ env "DB_PASS" }}
+      hostname: '{{ env "DB_HOST" }}'
+      port: '{{ env "DB_PORT" }}'
+      username: '{{ env "DB_USER" }}'
+      password: '{{ env "DB_PASS" }}'
       options: --skip-lock-tables --quick --single-transaction
       format: sql
     # You can also specify individual databases:
     # - name: my_database
-    #   hostname: {{ env "DB_HOST" }}
-    #   port: {{ env "DB_PORT" }}
-    #   username: {{ env "DB_USER" }}
-    #   password: {{ env "DB_PASS" }}
+    #   hostname: '{{ env "DB_HOST" }}'
+    #   port: '{{ env "DB_PORT" }}'
+    #   username: '{{ env "DB_USER" }}'
+    #   password: '{{ env "DB_PASS" }}'
 
 # ----------------------------------------------------------------------------
 # RETENTION POLICY - DATABASES
